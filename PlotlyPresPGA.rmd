@@ -1,0 +1,33 @@
+---
+title: "Plotly Peer Gtaded Assignment"
+author: "Haim Kotler"
+date: "30 September 2017"
+output: ioslides_presentation
+---
+
+## Overview
+
+- The following plotly plot displays avergae income as function of head of household age (18 and above).
+- The color marks avergae number of persons in the household.
+- Data was taken from 'American Housing Survey: Housing Affordability Data System' for year 2013.
+- Data source: https://www.huduser.gov/portal/datasets/hads/hads.html
+
+## Code for data loading, cleaning and summarizing
+
+```{r cache= TRUE}
+suppressPackageStartupMessages(library(plotly))
+suppressPackageStartupMessages(library(dplyr))
+require(dplyr)
+
+hhdata <- read.csv("thads2013n.csv")
+hhage <- group_by(hhdata[hhdata$AGE1>17,],AGE1)
+sumhhage <- hhage %>% summarise(mean(PER), mean(TOTSAL))
+colnames(sumhhage) <- c("age", "avg_persons", "avg_salary")
+```
+
+## The Plot
+
+```{r cache= TRUE}
+plot_ly(sumhhage, x = ~age, y = ~avg_salary, color = ~avg_persons, 
+        type = "scatter", mode = "markers")
+```
